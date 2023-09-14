@@ -1,0 +1,57 @@
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+
+const ViewProduct = () => {
+  const params = useParams();
+  const productId = parseInt(params.id);
+
+  const [viewProduct, setViewProduct] = useState({});
+
+  useEffect(() => {
+    fetch(`https://dummyjson.com/products/${productId}`)
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        setViewProduct(data);
+      });
+  }, [productId]);
+
+  return (
+    <div className="container">
+      <div className="row d-flex justify-content-center">
+        <h2 className="text-white">View Product {params.id}</h2>
+        <div className="card ms-2 mt-2 col-lg-3 m-1">
+          <div className="card-body p-4">
+            <h5 className="card-title">
+              Brand: {viewProduct.brand ? viewProduct.brand : "Loading..."}
+            </h5>
+            <h6>
+              Price: {viewProduct.price ? `$${viewProduct.price}` : "Loading..."}
+            </h6>
+            <h6>
+              Stock: {viewProduct.stock ? viewProduct.stock : "Loading..."}
+            </h6>
+
+            {viewProduct.images && viewProduct.images.length > 0 && (
+              <div>
+                <h6>Images:</h6>
+                <div className="image-container">
+                  {viewProduct.images.map((imageUrl, index) => (
+                    <img
+                      key={index}
+                      src={imageUrl}
+                      alt={`Image ${index + 1}`}
+                      className="product-image"
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ViewProduct;
